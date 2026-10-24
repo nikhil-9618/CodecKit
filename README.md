@@ -14,7 +14,7 @@ A lightweight, privacy-first toolkit for developers and cybersecurity profession
 [![Vanilla JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-16A34A?style=for-the-badge&logo=securityscorecard&logoColor=white)](#privacy--security)
 
-**No accounts · No advertisements · No analytics · No backend**
+**No accounts · No advertisements · No first-party analytics · No application backend**
 
 [Explore Features](#-features) · [Quick Start](#-quick-start) · [Deployment](#-deployment) · [Security](#-privacy--security)
 
@@ -30,7 +30,7 @@ Built with vanilla JavaScript and native browser APIs, it requires no dependency
 
 ### Why CodecKit?
 
-- **Privacy-first architecture** — process data locally whenever possible.
+- **Privacy-first architecture** — conversion and analysis run locally where possible; password breach and CVE lookups contact their respective public APIs.
 - **Zero-install setup** — no package manager or build pipeline required.
 - **Offline-ready experience** — access cached application resources after the initial visit.
 - **Modular design** — independent JavaScript ES modules for codec operations.
@@ -64,7 +64,7 @@ Built with vanilla JavaScript and native browser APIs, it requires no dependency
 - SHA-1 prefix-based k-anonymity lookup
 - Local comparison of returned hash suffixes
 
-The breach checker sends the first five hexadecimal characters of the password's SHA-1 hash, rather than the complete hash or plaintext password.
+The breach checker calculates the SHA-1 hash in the browser and sends only its first five hexadecimal characters to HIBP. The plaintext password and complete hash are not sent by this lookup flow. HIBP may still observe request metadata such as your IP address.
 
 ### Networking & Vulnerability Research
 
@@ -73,6 +73,8 @@ The breach checker sends the first five hexadecimal characters of the password's
 - Regular expression testing
 - Timestamp conversion
 - Additional developer utilities available in the application
+
+CVE lookups send the public CVE identifier to the NVD API. Results may be cached in your browser's local storage.
 
 ### Application Experience
 
@@ -224,6 +226,10 @@ CodecKit/
 
 The separation between the application and codec layers keeps conversion logic reusable and testable.
 
+### Network requests and third-party code
+
+Most tools work locally without a server. Two lookup features make outbound requests: the optional password breach checker sends a five-character SHA-1 prefix to HIBP, and the CVE tool sends a CVE ID to the NVD API. The hash page also loads the `blueimp-md5` script from jsDelivr for legacy MD5 support. Do not enter secrets into a tool unless you understand its behavior and trust the environment hosting the page.
+
 ## 📁 File Encoding
 
 The Base64, Hex, and Binary playground tabs support local file conversion.
@@ -242,6 +248,16 @@ The Base64, Hex, and Binary playground tabs support local file conversion.
 **Maximum file size:** 5 MB.
 
 Files are not uploaded by the documented encoding workflow.
+
+## 🧪 Tests
+
+The repository includes a Node.js test script for codec, JWT, and hashing behavior. Use Node.js 20 or newer.
+
+```bash
+node tests/codec-tests.mjs
+```
+
+The script exits with a non-zero status when assertions fail, making it suitable for continuous integration.
 
 ## 🧩 Extending CodecKit
 
