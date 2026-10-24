@@ -1,47 +1,163 @@
+
+<div align="center">
+
 # CodecKit
 
-A developer and cybersecurity toolkit that runs **entirely in your browser**.
-Encoders, JWT tools, hashes, a password breach check, subnet math, CVE
-explainers, regex testing and more — no accounts, no ads, no analytics, no
-backend. After the first visit it works offline.
+### The Browser-Native Developer & Cybersecurity Toolkit
 
-```
-No build step. No dependencies to install. No server.
-```
+**Encode. Decode. Analyze. Secure.**
 
-## Quick start
+A lightweight, privacy-first toolkit for developers and cybersecurity professionals. Perform encoding, decoding, cryptographic operations, JWT inspection, password breach checks, subnet calculations, CVE lookups, and more — directly in your browser.
 
-ES modules and the service worker need an HTTP origin, so `file://` will not
-work. Any static server is enough:
+[![GitHub Repository](https://img.shields.io/badge/GitHub-nikhil--9618%2FCodecKit-181717?style=for-the-badge&logo=github)](https://github.com/nikhil-9618/CodecKit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![Vanilla JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Privacy First](https://img.shields.io/badge/Privacy-First-16A34A?style=for-the-badge&logo=securityscorecard&logoColor=white)](#privacy--security)
+
+**No accounts · No advertisements · No first-party analytics · No application backend**
+
+[Explore Features](#-features) · [Quick Start](#-quick-start) · [Deployment](#-deployment) · [Security](#-privacy--security)
+
+</div>
+
+---
+
+## Overview
+
+CodecKit brings essential developer utilities and cybersecurity tools into one accessible web application.
+
+Built with vanilla JavaScript and native browser APIs, it requires no dependency installation, compilation, or application server. Its modular architecture makes it easy to extend with additional codecs and utilities.
+
+### Why CodecKit?
+
+- **Privacy-first architecture** — conversion and analysis run locally where possible; password breach and CVE lookups contact their respective public APIs.
+- **Zero-install setup** — no package manager or build pipeline required.
+- **Offline-ready experience** — access cached application resources after the initial visit.
+- **Modular design** — independent JavaScript ES modules for codec operations.
+- **Security-focused utilities** — work with hashes, JWTs, subnet calculations, and public vulnerability information.
+- **Simple deployment** — publish the repository directly to a static hosting provider.
+
+## 🚀 Features
+
+### Encoding & Decoding
+
+- Base64 encoder and decoder
+- Hexadecimal encoder and decoder
+- Binary representation
+- Text-to-byte conversions
+- File-to-Base64 data URI conversion
+- File-to-hex and file-to-binary conversion
+
+### Cryptography & JWT
+
+- Hash generation using Web Crypto
+- JWT decoding and inspection
+- JWT signing using browser cryptographic APIs
+- HMAC test-vector verification
+- Input validation and error handling
+
+> Decoding a JWT does not validate its signature. Always verify signatures and relevant claims before trusting a token.
+
+### Password Security
+
+- Password breach checking through Have I Been Pwned
+- SHA-1 prefix-based k-anonymity lookup
+- Local comparison of returned hash suffixes
+
+The breach checker calculates the SHA-1 hash in the browser and sends only its first five hexadecimal characters to HIBP. The plaintext password and complete hash are not sent by this lookup flow. HIBP may still observe request metadata such as your IP address.
+
+### Networking & Vulnerability Research
+
+- IPv4 subnet calculations
+- CVE information lookup through the NIST National Vulnerability Database
+- Regular expression testing
+- Timestamp conversion
+- Additional developer utilities available in the application
+
+CVE lookups send the public CVE identifier to the NVD API. Results may be cached in your browser's local storage.
+
+### Application Experience
+
+- Interactive codec playground
+- Data-driven tool registry
+- Responsive interface
+- File drag-and-drop support
+- Clipboard integration
+- Tool-specific input history
+- Progressive Web App support
+- Service-worker caching for offline access
+
+Feature descriptions reflect the intended tool set; verify individual tools and external-service availability in your deployment before relying on them.
+
+## ⚡ Quick Start
+
+CodecKit requires no build step and no dependency installation.
+
+### Prerequisites
+
+- Python 3 or Node.js
+- A modern browser with ES module support
+
+### 1. Clone the repository
 
 ```bash
-# Python 3
-python3 -m http.server 8080
+git clone https://github.com/nikhil-9618/CodecKit.git
+cd CodecKit
+```
 
-# or Node
+### 2. Start a local server
+
+**Python**
+
+```bash
+python3 -m http.server 8080
+```
+
+**Node.js**
+
+```bash
 npx --yes serve .
 ```
 
-Open <http://localhost:8080>. That is the whole setup — there is no `npm
-install`, no bundler and no transpiler.
+### 3. Open the application
 
-## Deploy
+Visit:
 
-The repository root **is** the publish directory.
+```text
+http://localhost:8080
+```
+
+That's it. No `npm install`, build command, or backend configuration is required.
+
+> Opening `index.html` through `file://` is not supported. ES modules and service workers require an appropriate HTTP or HTTPS origin.
+
+## 🌐 Deployment
+
+CodecKit is a static web application. The repository root is the publish directory.
+
+| Platform | Build command | Publish directory |
+|---|---|---|
+| Vercel | Leave empty | `.` |
+| Netlify | Leave empty | `.` |
+| Render Static Site | `true` | `.` |
+| Cloudflare Pages | No build required | `.` |
+| GitHub Pages | No build required | Repository root |
 
 ### Vercel
 
-1. Push the folder to GitHub.
-2. Import it in Vercel; framework preset **Other**, build command empty,
-   output directory `.`.
-3. Deploy. `vercel.json` adds the security headers and long-lived asset
-   caching.
+1. Push the repository to GitHub.
+2. Import `nikhil-9618/CodecKit` into Vercel.
+3. Select **Other** as the framework preset.
+4. Leave the build command empty.
+5. Set the output directory to `.`.
+6. Deploy.
 
 ### Netlify
 
-1. Drag the folder onto <https://app.netlify.com/drop>, or connect the repo.
-2. Build command empty, publish directory `.`.
-3. `netlify.toml` supplies the same headers.
+1. Connect your GitHub repository or use [Netlify Drop](https://app.netlify.com/drop).
+2. Leave the build command empty.
+3. Set the publish directory to `.`.
+4. Deploy.
 
 ### Cloudflare Workers
 
@@ -51,157 +167,235 @@ links such as `/pages/codecs.html` are served directly.
 
 ### Render
 
-1. Push the repo to GitHub/GitLab.
-2. Render → **New** → **Blueprint**, pick the repo. [`render.yaml`](render.yaml)
-   creates a static site with build command `true` (a no-op), publish path `.`,
-   and the same security headers as the other configs.
-3. Or create a **Static Site** manually: build command `true`, publish
-   directory `.`.
+1. Push the project to GitHub.
+2. Open Render and select **New → Blueprint**.
+3. Select `nikhil-9618/CodecKit`.
+4. Review the `render.yaml` configuration.
+5. Deploy the static site.
 
-Render serves directory indexes, so `/base64-decoder/` works without rewrites,
-and `/sw.js` is sent with `Cache-Control: no-cache`.
+**Important:** These instructions assume the corresponding deployment configuration files exist and are valid. Verify the deployed security headers and nested routes after publishing.
 
-### Railway
+## 🏗️ Project Structure
 
-Railway's Railpack builder detects a root `index.html` and serves it with
-Caddy; [`Staticfile`](Staticfile) pins the root and disables SPA fallback.
-
-```bash
-npx @railway/cli login          # opens the browser / device-code flow
-npx @railway/cli init           # or: railway link (existing project)
-npx @railway/cli up             # uploads this directory, no Git needed
-npx @railway/cli domain         # generate the public HTTPS URL
+```text
+CodecKit/
+├── index.html
+├── app.js
+├── router.js
+├── styles.css
+├── sw.js
+├── manifest.json
+│
+├── lib/
+│   ├── debounce.js
+│   ├── clipboard.js
+│   ├── storage.js
+│   ├── detect.js
+│   ├── errors.js
+│   └── boot.js
+│
+├── codecs/
+│   ├── index.js
+│   └── ...
+│
+├── pages/
+│   └── ...
+│
+├── base64-decoder/
+├── jwt-decoder/
+├── hex-to-text/
+├── subnet-calculator/
+├── timestamp-converter/
+│
+├── blog/
+├── tests/
+│   └── codec-tests.mjs
+│
+├── tools/
+├── vercel.json
+├── netlify.toml
+├── render.yaml
+├── Staticfile
+├── LICENSE
+└── README.md
 ```
 
-No build command or start command is needed. Railway's default static server
-does **not** apply the custom CSP from `vercel.json`/`render.yaml`; use Render,
-Vercel or Netlify if you need those headers. HTTPS (and therefore the service
-worker) is provided by Railway's domain.
+### Architecture
 
-### Any static host
+| Layer | Responsibility |
+|---|---|
+| Presentation | HTML and CSS |
+| Application | Routing, UI, state, and orchestration |
+| Codec | Independent encoding and decoding modules |
+| Platform | Web Crypto, File API, Clipboard, and local storage |
+| Offline | Service worker and PWA manifest |
 
-Upload the files as-is (GitHub Pages, Cloudflare Pages, S3, nginx). Serve
-`/base64-decoder/` style directories with their `index.html`. HTTPS is
-required for the service worker and the Clipboard API.
+The separation between the application and codec layers keeps conversion logic reusable and testable.
 
-### Before publishing
+### Network requests and third-party code
 
-- [ ] Replace the placeholder GitHub and donation links in
-      `pages/about.html` (marked with `TODO`).
-- [ ] If you add a custom domain, you can add `<link rel="canonical">` and
-      `og:url` tags to the SEO pages.
-- [ ] Bump `CACHE_VERSION` in `sw.js` after changing cached files.
+Most tools work locally without a server. Two lookup features make outbound requests: the optional password breach checker sends a five-character SHA-1 prefix to HIBP, and the CVE tool sends a CVE ID to the NVD API. The hash page also loads the `blueimp-md5` script from jsDelivr for legacy MD5 support. Do not enter secrets into a tool unless you understand its behavior and trust the environment hosting the page.
 
-## What is inside
+## 📁 File Encoding
 
-```
-index.html              landing page, toolkit grid
-app.js                  UI runtime: playground, tabs, shortcuts, history
-router.js               ~60-line hash router
-styles.css              the only stylesheet
-sw.js                   service worker (precache + strategies)
-manifest.json           PWA manifest
-/lib/                   debounce, clipboard, storage, detect, errors, boot
-/codecs/                pure codec modules + registry
-/pages/                 tool pages and their page-specific wiring
-/base64-decoder/        SEO landing pages (static HTML + embedded tool)
-/jwt-decoder/
-/hex-to-text/
-/subnet-calculator/
-/timestamp-converter/
-/blog/                  three articles
-/tests/codec-tests.mjs  Node test suite for the codec layer
-/tools/                 icon generator (build-time only, not shipped)
-```
+The Base64, Hex, and Binary playground tabs support local file conversion.
 
-## File → Base64
+1. Select a file or drag it into the drop zone.
+2. The browser reads the file using the File API.
+3. CodecKit converts its contents locally.
+4. The output appears in the playground.
 
-The Base64, Hex and Binary tabs in the playground show a drop zone above the
-input. Drop a file (5 MB cap) or use the picker, and the output becomes a
-`data:` URI (Base64) or the byte dump (hex/binary). The file never leaves the
-browser — it is read with the File API and encoded locally.
+| Mode | Result |
+|---|---|
+| Base64 | Encoded data URI |
+| Hex | Hexadecimal byte representation |
+| Binary | Binary byte representation |
 
-### Layers
+**Maximum file size:** 5 MB.
 
-| Layer | Files | Rule |
-| --- | --- | --- |
-| Presentation | `*.html`, `styles.css` | markup and styling only |
-| Application | `app.js`, `router.js`, `lib/` | may touch the DOM |
-| Codec | `codecs/*.js` | **pure** `(string) => string`, no DOM, no storage, no fetch |
-| Platform | Web Crypto, TextEncoder, localStorage, Clipboard, File API | browser APIs |
-| Offline | `sw.js`, `manifest.json` | cache-first static, network-only APIs |
+Files are not uploaded by the documented encoding workflow.
 
-## Adding a codec
+## 🧪 Tests
 
-1. Create `codecs/my-thing.js`:
-
-   ```js
-   export const meta = {
-     id: 'my-thing',
-     name: 'My Thing',
-     canEncode: true,
-     canDecode: true,
-     description: 'One line for the tool cards.',
-     explanation: 'What it is and where it is used.',
-   };
-   export function encode(input) { /* ... */ return ''; }   // throw on bad input
-   export function decode(input) { /* ... */ return ''; }
-   ```
-
-2. Add one line to `codecs/index.js`.
-3. Append the file to `PRECACHE` in `sw.js` and bump `CACHE_VERSION`.
-4. Add cases to `tests/codec-tests.mjs` and run `node tests/codec-tests.mjs`.
-
-The codec appears automatically in the playground tabs and the home grid is
-data-driven, so no other wiring is required.
-
-### Async codecs
-
-`hash.js` and `jwt-sign.js` are async because they use `crypto.subtle`. The
-playground awaits any codec that returns a promise; lazy codecs are declared in
-`codecs/index.js` so their modules are only fetched when opened.
-
-## Tests
+The repository includes a Node.js test script for codec, JWT, and hashing behavior. Use Node.js 20 or newer.
 
 ```bash
 node tests/codec-tests.mjs
 ```
 
-Covers round-trips for every codec, UTF-8 edge cases (multi-byte, emoji,
-surrogates), invalid-input errors, and an HMAC comparison against Node's
-`crypto` module. 55 assertions, no test framework.
+The script exits with a non-zero status when assertions fail, making it suitable for continuous integration.
 
-For the browser tools, the checklists used during development are in the
-project history: round-trips in the playground, subnet values against
-`ipcalc`, HIBP prefix visibility in the network panel, JWT output accepted by
-jwt.io, CVE lookups against NVD, and a clean console on every page.
+## 🧩 Extending CodecKit
 
-## Privacy model
+Add new codecs through the existing registry architecture.
 
-- No accounts, cookies, analytics or third-party fonts.
-- All conversions run in the tab; nothing is uploaded.
-- **Two network calls exist, both deliberate:**
-  1. `api.pwnedpasswords.com/range/<first 5 hex of SHA-1>` — k-anonymity
-     breach check. The remaining 35 characters never leave the browser.
-  2. `services.nvd.nist.gov/...?cveId=...` — sends a public CVE ID, caches the
-     response in `localStorage` for 24 hours.
-- Secrets pasted into the JWT signer are used by Web Crypto in the page and
-  are never transmitted or stored.
-- `localStorage` holds preferences, the last 10 inputs per tool and CVE
-  cache entries. "Reset all locally saved data" on the About page clears it.
+Create `codecs/my-thing.js`:
 
-## Performance notes
+```javascript
+export const meta = {
+  id: 'my-thing',
+  name: 'My Thing',
+  canEncode: true,
+  canDecode: true,
+  description: 'A short description.',
+  explanation: 'Explain the format and its use cases.'
+};
 
-Vanilla ES modules, one CSS file, system fonts, no framework or polyfill. The
-hash and JWT-signing modules are loaded on demand. The service worker
-precaches the static shell so repeat visits and offline use need no network.
+export function encode(input) {
+  // Implement encoding logic.
+  // Throw an Error for invalid input.
+  return '';
+}
 
-## Browser support
+export function decode(input) {
+  // Implement decoding logic.
+  // Throw an Error for invalid input.
+  return '';
+}
+```
 
-Current Chrome, Edge, Firefox and Safari. Requires ES modules, `crypto.subtle`
-(secure context), `TextEncoder` and, for offline support, service workers.
-`String.prototype.replaceAll` is avoided.
+Then:
 
-## License
+1. Register the module in `codecs/index.js`.
+2. Add the file to `PRECACHE` in `sw.js`.
+3. Increment `CACHE_VERSION`.
+4. Add test cases to `tests/codec-tests.mjs`.
 
-MIT — see [LICENSE](LICENSE).
+## 🧪 Testing
+
+Run the codec regression suite:
+
+```bash
+node tests/codec-tests.mjs
+```
+
+The documented suite covers round-trip conversions, UTF-8 edge cases, invalid-input handling, and HMAC comparisons against Node.js cryptographic operations.
+
+Additional manual checks should validate subnet calculations, password breach-check requests, JWT behavior, CVE lookups, nested routes, offline functionality, and production response headers.
+
+## 🔒 Privacy & Security
+
+CodecKit is designed to minimize data transmission.
+
+### Local Processing
+
+- Encoding and decoding run in the browser.
+- File conversions use the File API.
+- JWT signing uses Web Crypto.
+- Application functionality does not require a dedicated backend.
+
+### External API Requests
+
+Two documented features contact external services:
+
+| Feature | Service | Data sent |
+|---|---|---|
+| Password breach check | Have I Been Pwned | First five hexadecimal characters of the SHA-1 hash |
+| CVE lookup | NIST NVD API | Public CVE identifier |
+
+CVE responses are cached locally for 24 hours according to the documented design.
+
+### Local Data
+
+`localStorage` holds preferences, recent tool inputs, and CVE cache entries. Use **Reset all locally saved data** on the About page to clear application-managed saved data.
+
+Do not enter sensitive production secrets into browser utilities unless you understand the security implications and local retention behavior.
+
+### Security Considerations
+
+- SHA-1 is used for compatibility with the breach-checking protocol, not for secure password storage.
+- Decoded JWT claims must be treated as untrusted until verified.
+- Browser-local processing does not protect against compromised devices or malicious extensions.
+- External services receive the information required for their respective lookups.
+- Hosting configurations must be checked to confirm that security headers are actually applied.
+
+## ⚙️ Performance & Offline Support
+
+CodecKit uses vanilla JavaScript ES modules, a single stylesheet, system fonts, and native browser APIs.
+
+The service worker precaches application resources to enable offline access after the initial cache has been populated.
+
+Features requiring live API responses may remain unavailable offline unless usable cached data exists.
+
+Increment `CACHE_VERSION` whenever cached assets change.
+
+## 🌍 Browser Compatibility
+
+Target browsers:
+
+- Google Chrome
+- Microsoft Edge
+- Mozilla Firefox
+- Apple Safari
+
+Requirements include JavaScript ES modules, `TextEncoder`, Web Crypto in a secure context, and service workers for offline support.
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Implement your changes.
+4. Add tests for new functionality.
+5. Run `node tests/codec-tests.mjs`.
+6. Verify browser behavior and error handling.
+7. Submit a pull request with a clear description.
+
+Keep codec modules independent of DOM, storage, and network APIs. Document any new external requests and avoid logging sensitive input.
+
+## 📄 License
+
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
+
+---
+
+<div align="center">
+
+**CodecKit**
+
+*Built for developers. Designed with privacy in mind.*
+
+Maintained by [nikhil-9618](https://github.com/nikhil-9618)
+
+</div>

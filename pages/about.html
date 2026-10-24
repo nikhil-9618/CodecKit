@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About | CodecKit</title>
-  <meta name="description" content="CodecKit is a free, open-source, 100% client-side developer and cybersecurity toolkit. No tracking, no accounts, no ads.">
+  <meta name="description" content="CodecKit is a free, open-source developer and cybersecurity toolkit. Most processing runs locally; password breach and CVE lookups use public APIs. No accounts or ads.">
   <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
   <script src="/lib/boot.js"></script>
@@ -45,7 +45,7 @@
       <ul>
         <li>No accounts, no logins, no sessions.</li>
         <li>No analytics, no trackers, no cookies. No cookie banner needed — there is nothing to consent to.</li>
-        <li>Your input never leaves the browser, with exactly two exceptions, both necessary and both public:<br>
+        <li>Most inputs stay in your browser. The following features make external requests:<br>
           1. <strong>Password breach check</strong> uses HIBP k-anonymity — only the first 5 hex chars of a local SHA-1 are sent; the full hash and password stay local.<br>
           2. <strong>CVE lookup</strong> sends the CVE ID — which is public information anyway — to the NVD API.</li>
         <li>Everything else (JWT secrets, hashes, diffs, your last 10 inputs per tool) lives in <code>localStorage</code> on your device.</li>
@@ -55,9 +55,8 @@
       <h2 id="feedback">Feedback &amp; contributions</h2>
       <p>CodecKit is open source (MIT). Ideas, bugs and pull requests are welcome — see CONTRIBUTING.md in the repository. Adding a codec is one file + one registry line.</p>
       <ul>
-        <!-- TODO: replace with your repository / donation URLs before publishing. -->
-        <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a> — source code, issue tracker and pull requests.</li>
-        <li><a href="https://ko-fi.com/" target="_blank" rel="noopener noreferrer">Support the project</a> — hosting is free and the app has no ads; a coffee is optional.</li>
+        <li><a href="https://github.com/nikhil-9618/CodecKit" target="_blank" rel="noopener noreferrer">GitHub repository</a> — source code, issues and pull requests.</li>
+        <li><a href="https://github.com/nikhil-9618/CodecKit/issues" target="_blank" rel="noopener noreferrer">Report a bug or request a feature</a>.</li>
       </ul>
       <div class="actions">
         <button class="btn" data-action="reset-data" type="button">Reset all locally saved data</button>
@@ -73,7 +72,7 @@
 
   <footer class="site">
     <div class="container">
-      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <span class="privacy-note">🔒 Most processing runs in your browser. Password breach and CVE lookups use public APIs.</span>
       <a href="/">Home</a>
       <a href="/blog/">Blog</a>
       <span>MIT licensed · no cookies, no trackers</span>

@@ -1,10 +1,13 @@
 {
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/schema.json",
   "name": "codeckit",
   "main": "worker.js",
   "compatibility_date": "2026-10-24",
   "assets": {
     "directory": ".",
     "binding": "ASSETS",
-    "html_handling": "none"
+    "not_found_handling": "404-page",
+    "html_handling": "none",
+    "run_worker_first": false
   }
 }

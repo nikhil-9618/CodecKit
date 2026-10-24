@@ -12,6 +12,5 @@ netlify.toml
 render.yaml
 vercel.json
 wrangler.jsonc
-worker.js
 .gitignore
 .assetsignore
