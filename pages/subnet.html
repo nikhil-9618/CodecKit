@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subnet Calculator | CodecKit</title>
+  <meta name="description" content="IPv4 CIDR calculator: network address, broadcast, usable host range, host count, subnet mask, wildcard mask and address class — with step-by-step binary math.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/subnet.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html" aria-current="page">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Subnet Calculator</h1>
+      <p class="muted">Enter an IPv4 address with a CIDR prefix, e.g. <code>192.168.1.130/26</code>. <strong class="privacy-note">🔒 Pure math, no network.</strong></p>
+
+      <section class="tool">
+        <label for="cidr">Address / CIDR</label>
+        <input id="cidr" data-cidr type="text" placeholder="192.168.1.130/26" spellcheck="false">
+        <table data-results>
+          <tbody>
+            <tr><th scope="row">Network address</th><td class="mono" data-network>—</td></tr>
+            <tr><th scope="row">Broadcast</th><td class="mono" data-broadcast>—</td></tr>
+            <tr><th scope="row">Subnet mask</th><td class="mono" data-mask>—</td></tr>
+            <tr><th scope="row">Wildcard mask</th><td class="mono" data-wildcard>—</td></tr>
+            <tr><th scope="row">Usable host range</th><td class="mono" data-range>—</td></tr>
+            <tr><th scope="row">Usable hosts</th><td class="mono" data-hosts>—</td></tr>
+            <tr><th scope="row">Address class</th><td data-iplclass class="mono">—</td></tr>
+          </tbody>
+        </table>
+        <p class="error-line" data-error hidden role="alert"></p>
+      </section>
+
+      <section class="tool" data-binary hidden>
+        <h2>Binary math</h2>
+        <table>
+          <tr><th scope="row">Address (binary)</th><td class="mono" data-b-addr></td></tr>
+          <tr><th scope="row">Mask (binary)</th><td class="mono" data-b-mask></td></tr>
+          <tr><th scope="row">AND → network (binary)</th><td class="mono" data-b-net></td></tr>
+          <tr><th scope="row">OR wildcard → broadcast (binary)</th><td class="mono" data-b-bcast></td></tr>
+        </table>
+        <p class="muted small">How it works: the 32-bit address is ANDed with the subnet mask (prefix bits = 1) to get the network address; ORed with the wildcard mask (inverse) to get the broadcast. That's the whole of subnetting — everything else is bookkeeping.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

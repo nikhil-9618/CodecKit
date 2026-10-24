@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explain Shell Command | CodecKit</title>
+  <meta name="description" content="Flag-by-flag explanations of shell commands: nmap, netcat, curl, chmod, ssh, grep and more. Unknown flags point you to the man page. No network.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/explain-command.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html" aria-current="page">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Explain This Command</h1>
+      <p class="muted">Breaks a command into words and explains each flag from a built-in dictionary. Works fully offline. Deeper, per-argument explanations: <a href="https://explainshell.com" target="_blank" rel="noopener noreferrer">explainshell.com</a>.</p>
+
+      <section class="tool">
+        <label for="cmd">Command</label>
+        <input id="cmd" data-cmd type="text" placeholder="nmap -sV -p 1-1000 10.0.0.1" spellcheck="false" autocomplete="off">
+        <div data-explanation style="margin-top:10px"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

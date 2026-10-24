@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog — Notes on encoding, tokens and privacy | CodecKit</title>
+  <meta name="description" content="Short, practical articles about encoding, JWTs, hashing and privacy engineering — written for developers who want the why, not just the how.">
+  <meta property="og:title" content="CodecKit Blog">
+  <meta property="og:description" content="Practical notes on Base64, JWTs, hashing and k-anonymity.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container prose">
+      <h1>The CodecKit blog</h1>
+      <p class="muted">Short pieces about the formats we decode every day — and the privacy math behind the tools.</p>
+
+      <ul class="toolkit" style="grid-template-columns:1fr">
+        <li class="tool-card">
+          <a href="/blog/base64-vs-base64url.html">
+            <span class="tool-name">Base64 vs Base64URL</span>
+            <span class="tool-desc">Same bytes, different alphabets — and why JWTs chose the URL-safe one. 4 min read.</span>
+          </a>
+        </li>
+        <li class="tool-card">
+          <a href="/blog/how-to-read-a-jwt.html">
+            <span class="tool-name">How to read a JWT</span>
+            <span class="tool-desc">Header, claims, signature and the five checks that actually matter. 6 min read.</span>
+          </a>
+        </li>
+        <li class="tool-card">
+          <a href="/blog/what-is-k-anonymity.html">
+            <span class="tool-name">What is k-anonymity?</span>
+            <span class="tool-desc">How a breach check can answer “is this password leaked?” without learning the password. 5 min read.</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="muted small">New here? Start with the <a href="/">toolkit</a> or read <a href="/pages/about.html">about the project</a>.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

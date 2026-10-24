@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hash Generator &amp; Identifier | CodecKit</title>
+  <meta name="description" content="Compute MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes of any text in your browser, plus identify unknown hashes by length and charset.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js" crossorigin="anonymous"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/hash.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html" aria-current="page">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Hash Generator &amp; Identifier</h1>
+      <p class="muted">Hashes are one-way fingerprints — there is no "decode". <strong class="privacy-note">🔒 Hashing happens locally via Web Crypto.</strong></p>
+
+      <div class="tabs">
+        <button class="tab active" data-hashtab="generator" type="button" aria-pressed="true">Generator</button>
+        <button class="tab" data-hashtab="identifier" id="identify" type="button" aria-pressed="false">Identifier</button>
+      </div>
+
+      <section class="tool" id="hash-generator">
+        <label for="hash-in">Text to hash</label>
+        <textarea id="hash-in" data-hash-input placeholder="Type to see live digests…" spellcheck="false"></textarea>
+        <table>
+          <thead><tr><th>Algorithm</th><th>Digest (lowercase hex)</th><th></th></tr></thead>
+          <tbody data-hash-rows>
+            <tr><td>MD5*</td><td class="mono" data-h="md5">—</td><td><button class="btn ghost" data-copy-h="md5" type="button">Copy</button></td></tr>
+            <tr><td>SHA-1</td><td class="mono" data-h="sha1">—</td><td><button class="btn ghost" data-copy-h="sha1" type="button">Copy</button></td></tr>
+            <tr><td>SHA-256</td><td class="mono" data-h="sha256">—</td><td><button class="btn ghost" data-copy-h="sha256" type="button">Copy</button></td></tr>
+            <tr><td>SHA-384</td><td class="mono" data-h="sha384">—</td><td><button class="btn ghost" data-copy-h="sha384" type="button">Copy</button></td></tr>
+            <tr><td>SHA-512</td><td class="mono" data-h="sha512">—</td><td><button class="btn ghost" data-copy-h="sha512" type="button">Copy</button></td></tr>
+          </tbody>
+        </table>
+        <p class="muted small">* MD5/SHA-1 are broken for collision resistance and shown for legacy pipelines only. MD5 runs from the blueimp-md5 library (the tool's only third-party file).</p>
+      </section>
+
+      <section class="tool" id="hash-identifier" hidden>
+        <label for="ident-in">Unknown hash</label>
+        <textarea id="ident-in" data-ident-input placeholder="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 …or a bcrypt/argon2 string" spellcheck="false"></textarea>
+        <div data-ident-result></div>
+        <p class="error-line" data-ident-error hidden role="alert"></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

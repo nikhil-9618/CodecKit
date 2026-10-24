@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CVE Explainer | CodecKit</title>
+  <meta name="description" content="Look up CVEs on the NVD API and get plain-English summaries, CVSS score badges, affected products and an action checklist. Only the public CVE ID is sent.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/cve.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html" aria-current="page">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>CVE Explainer</h1>
+      <p class="muted">
+        Paste a CVE ID (e.g. <code>CVE-2021-44228</code>). We query the public NVD API with just that ID —
+        <strong class="privacy-note">🔒 no other data leaves your browser.</strong> Results are cached locally for 24 h.
+      </p>
+
+      <section class="tool">
+        <label for="cve">CVE identifier</label>
+        <input id="cve" data-cve-input type="text" placeholder="CVE-2021-44228" spellcheck="false">
+        <div class="actions">
+          <button class="btn primary" data-fetch type="button">Fetch &amp; explain</button>
+          <span class="muted small" data-cache-note></span>
+        </div>
+        <p class="error-line" data-error hidden role="alert"></p>
+      </section>
+
+      <section class="tool" data-result hidden>
+        <h2 style="margin-top:0"><span data-cve-id></span>
+          <span class="badge" data-sev-badge hidden></span>
+        </h2>
+        <p data-summary></p>
+        <table>
+          <tr><th scope="row">CVSS v3.1 base score</th><td><strong data-score>—</strong> <span class="muted" data-vector></span></td></tr>
+          <tr><th scope="row">Published</th><td data-published></td></tr>
+          <tr><th scope="row">Affected products</th><td class="small" data-products></td></tr>
+        </table>
+        <h3>What to do</h3>
+        <ul data-todos style="padding-left:22px"></ul>
+        <p class="muted small">Links: <a data-link-nvd href="#" target="_blank" rel="noopener noreferrer">NVD record</a> ·
+          <a data-link-advisory href="#" target="_blank" rel="noopener noreferrer">vendor advisories via NVD references</a></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 CVE ID only is ever sent — public knowledge anyway.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

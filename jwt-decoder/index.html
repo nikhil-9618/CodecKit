@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JWT Decoder — Read Header &amp; Claims Offline | CodecKit</title>
+  <meta name="description" content="Decode a JSON Web Token in your browser: pretty-printed header and payload, human-readable iat/exp dates, expiry badge. No token ever leaves your device.">
+  <meta property="og:title" content="JWT Decoder — inspect header and claims">
+  <meta property="og:description" content="Paste a JWT to see its header, claims and expiry status. Runs entirely client-side; signatures are not verified.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/jwt.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does decoding a JWT verify its signature?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Decoding only Base64URL-decodes the header and payload. Verification requires the signing key or public key and must happen on your server. A decoded token proves nothing about who issued it." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is the token in three parts?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A JWT is header.payload.signature. The first two parts are JSON encoded as Base64URL; the third is the cryptographic signature over the first two, encoded the same way." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it safe to paste a production token here?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The page never transmits the token, so it stays on your machine. Still, a token grants access until it expires — prefer a test token, and never paste one into a site you do not trust." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html" aria-current="page">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>JWT Decoder</h1>
+      <p class="muted">Paste a JSON Web Token to read its header and claims. <strong class="privacy-note">🔒 Parsed locally; the token is never sent.</strong></p>
+
+      <section class="tool" data-codec="jwt" data-direction="decode">
+        <label for="jwt-in">Token</label>
+        <textarea id="jwt-in" data-input placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.…" spellcheck="false" autofocus></textarea>
+        <label for="jwt-out">Decoded</label>
+        <textarea id="jwt-out" data-output readonly spellcheck="false"></textarea>
+        <div class="actions">
+          <button class="btn" data-action="copy" type="button">Copy 📋</button>
+          <span class="badge" data-exp-badge hidden></span>
+          <a class="btn" href="/pages/jwt.html#signer">Create a test token →</a>
+        </div>
+        <p class="error-line" data-error hidden role="alert"></p>
+        <p class="muted small">Decoded only — the signature is <strong>not</strong> verified here.</p>
+      </section>
+
+      <h2>What is a JSON Web Token?</h2>
+      <p>A JWT is a compact way to carry claims between two parties. It looks like three Base64URL strings separated by dots: <code>header.payload.signature</code>. The header names the signing algorithm, typically <code>HS256</code> or <code>RS256</code>. The payload is a JSON object of claims — who the subject is, which audience the token is for, when it was issued and when it expires. The signature is computed over the first two segments using a shared secret (HMAC) or a private key (RSA/ECDSA).</p>
+      <p>Decoding is just Base64URL with padding restored. Every JWT library can do it, and so can this page: the raw bytes are decoded as UTF-8, parsed as JSON, and pretty-printed with timestamps humanized.</p>
+
+      <h2>Claims worth checking</h2>
+      <ul>
+        <li><code>iat</code> — issued at, seconds since the Unix epoch.</li>
+        <li><code>exp</code> — expiry. An expired token must be rejected by the server; the badge above compares it to your clock.</li>
+        <li><code>nbf</code> — not before: the token is invalid until this time.</li>
+        <li><code>aud</code> — intended audience. A token for service A should not be accepted by service B.</li>
+        <li><code>iss</code> — issuer, which the verifier must check against a trusted value.</li>
+        <li><code>sub</code> — subject, usually a user identifier.</li>
+      </ul>
+
+      <h2>What decoding cannot tell you</h2>
+      <p>It cannot tell you whether the token is authentic. Anyone can craft a payload and attach a random signature. Only a verifier holding the correct key can decide. It also cannot tell you whether the algorithm is safe: <code>alg: none</code> and algorithm-confusion attacks are real, which is why servers must pin the expected algorithm rather than trusting the header.</p>
+      <p>Need a sample token to play with? The <a href="/pages/jwt.html#signer">HS256 signer</a> creates one locally; the secret never leaves the page. For the full walkthrough, read <a href="/blog/how-to-read-a-jwt.html">How to read a JWT</a>.</p>
+
+      <h2>Frequently asked questions</h2>
+      <h3>Does decoding verify the signature?</h3>
+      <p>No. Decoding and verification are different operations. This tool only decodes.</p>
+      <h3>Why is the token in three parts?</h3>
+      <p>Header, payload and signature — the last one is computed over the first two.</p>
+      <h3>Is it safe to paste a production token here?</h3>
+      <p>The token never leaves your browser, but a live token is a bearer credential. Use a test token when you can.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

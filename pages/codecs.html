@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codecs — Encode &amp; Decode | CodecKit</title>
+  <meta name="description" content="Encode and decode Base64, Base64URL, Base32, Base58, URL, hex, binary, ROT13, Caesar, Morse, Bacon, HTML entities, unicode escapes and JWTs — entirely in your browser.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html" aria-current="page">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Encoding &amp; Decoding</h1>
+      <p class="muted">Pick a codec, choose encode or decode, type or paste. <strong class="privacy-note">🔒 All conversion happens in your browser.</strong></p>
+
+      <div class="playground" id="playground">
+        <div class="tabs" data-tabs role="group" aria-label="Codec"></div>
+
+        <p class="banner" data-detect hidden>
+          <span data-detect-text></span>
+          <button class="btn" data-detect-use type="button">Use this codec</button>
+          <button class="btn ghost" data-detect-dismiss type="button">Dismiss</button>
+        </p>
+
+        <section class="tool">
+          <div class="actions">
+            <div class="mode" role="group" aria-label="Direction">
+              <button data-mode-encode type="button">Encode</button>
+              <button data-mode-decode type="button">Decode</button>
+            </div>
+            <span id="shift-wrap" data-shift-wrap hidden>
+              <label for="shift">Shift</label>
+              <input id="shift" style="max-width:130px;display:inline-block" data-shift type="range" min="1" max="25" step="1" value="3">
+              <span class="muted" data-shift-label>Shift: 3</span>
+            </span>
+          </div>
+
+          <div class="dropzone" data-file-controls hidden>
+            <div class="dropzone-text">
+              <strong data-file-title>File → Base64</strong>
+              <span class="muted small">Drop a file here or choose one — 5 MB max. It never leaves your browser.</span>
+              <span class="muted small" data-file-info hidden></span>
+            </div>
+            <div class="dropzone-actions">
+              <input id="plg-file" data-file type="file" aria-label="Choose a file to encode">
+              <button class="btn ghost" data-file-clear type="button" hidden>Clear file</button>
+            </div>
+          </div>
+
+          <label for="plg-input">Input</label>
+          <textarea id="plg-input" data-input placeholder="Type or paste here — or drop a file above (≤5 MB)" spellcheck="false"></textarea>
+
+          <label for="plg-output">Output</label>
+          <textarea id="plg-output" data-output readonly spellcheck="false"></textarea>
+          <span class="muted small" data-output-line>0 chars</span>
+
+          <div class="actions">
+            <button class="btn" data-action="swap" type="button" title="Copy output into input (Ctrl/⌘+Enter)">Swap ⇅</button>
+            <button class="btn" data-action="clear" type="button">Clear</button>
+            <button class="btn" data-action="copy" type="button" title="Ctrl/⌘+Shift+C">Copy 📋</button>
+            <button class="btn" data-action="share" type="button" title="Copy a link that restores this input">Share 🔗</button>
+          </div>
+
+          <p class="error-line" data-error hidden role="alert"></p>
+
+          <select data-history aria-label="Recent inputs">
+            <option value="">Recent…</option>
+          </select>
+
+          <details class="explain">
+            <summary>About this codec</summary>
+            <p data-explain class="muted"></p>
+          </details>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="shortcuts-modal">
+    <h2>Keyboard shortcuts</h2>
+    <table>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>K</kbd></td><td>focus input</td></tr>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>Shift</kbd> <kbd>C</kbd></td><td>copy output</td></tr>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>Enter</kbd></td><td>swap input/output</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>clear (while typing)</td></tr>
+      <tr><td><kbd>?</kbd></td><td>this dialog</td></tr>
+    </table>
+    <form method="dialog"><button class="btn">Close</button></form>
+  </dialog>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+      <span>MIT licensed · no cookies, no trackers</span>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

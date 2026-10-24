@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Base64 vs Base64URL — why JWT uses a different alphabet | CodecKit</title>
+  <meta name="description" content="Both encodings carry the same bytes. The difference is two characters, one padding rule, and a decade of broken URLs. Here is what actually changed and when to use which.">
+  <meta property="og:title" content="Base64 vs Base64URL">
+  <meta property="og:description" content="Two characters, one padding rule, and why JWTs are URL-safe.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Base64 vs Base64URL",
+    "description": "Why the URL-safe alphabet exists and when each encoding is appropriate.",
+    "author": { "@type": "Organization", "name": "CodecKit" },
+    "publisher": { "@type": "Organization", "name": "CodecKit" },
+    "datePublished": "2026-01-12",
+    "mainEntityOfPage": "/blog/base64-vs-base64url.html"
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container prose">
+      <p class="muted small"><a href="/blog/">← All articles</a> · 12 January 2026 · 4 min read</p>
+      <h1>Base64 vs Base64URL</h1>
+
+      <p>Base64 and Base64URL produce different strings for the same input, and people treat that as a quirk. It is not a quirk — it is a deliberate fix for a specific bug class: characters that mean something to the systems carrying the data.</p>
+
+      <h2>The original alphabet is not URL-safe</h2>
+      <p>Standard Base64 (RFC 4648) uses <code>A–Z</code>, <code>a–z</code>, <code>0–9</code>, <code>+</code> and <code>/</code>. Those last two are the problem. In a URL path, <code>/</code> is a separator: a base64 blob containing a slash can become two path segments, and routers, proxies and caches will happily rewrite it. In a query string, <code>+</code> is decoded as a space by many form parsers, so the value changes in transit. Padding adds a third wrinkle: <code>=</code> is legal in a query string but awkward in filenames and some routing layers.</p>
+      <p>The URL-safe variant (RFC 4648 §5) makes three changes: <code>+</code> becomes <code>-</code>, <code>/</code> becomes <code>_</code>, and padding is usually omitted entirely. That is the whole difference. The bit stream is identical — 6 bits per character, four characters per three bytes.</p>
+
+      <h2>Side by side</h2>
+      <p>Take the bytes for the string <code>subjects?_d</code>, which happen to produce both special characters:</p>
+      <pre><code>Standard:  c3ViamVjdHM/X2Q=
+Base64URL: c3ViamVjdHM_X2Q</code></pre>
+      <p>Decoding is symmetric: replace <code>-</code> with <code>+</code>, <code>_</code> with <code>/</code>, add <code>=</code> until the length is a multiple of four, then run the normal decoder. Most libraries expose both as flags or separate functions; browsers give you neither, which is why every implementation carries a fifteen-line helper.</p>
+
+      <h2>Why JWTs picked the URL-safe one</h2>
+      <p>A JWT is designed to be passed in an <code>Authorization</code> header, a cookie, or a query parameter during an OAuth redirect. Any of those paths can mangle <code>+</code>, <code>/</code> and <code>=</code>. The JWS specification therefore requires Base64URL without padding for all three segments. A token that has been percent-encoded somewhere along the way is still decodable — but a token with a slash in the middle may have been truncated by a proxy long before you see it.</p>
+      <p>If you paste a token into a decoder and get “invalid input” on the signature segment, check whether some layer translated <code>-</code> back to <code>+</code> or <code>_</code> to <code>/</code>. That usually means a base64 decoder was applied where a base64url decoder belonged.</p>
+
+      <h2>When to use which</h2>
+      <ul>
+        <li><strong>Base64</strong> — MIME/email attachments, data URIs, PEM blocks, HTTP Basic auth. These contexts expect the standard alphabet and often expect padding.</li>
+        <li><strong>Base64URL</strong> — anything that will appear in a URL, filename, cookie, or JWT/JWS/JWE segment.</li>
+        <li><strong>Neither</strong> for secrets. Both are reversible by anyone; they are transport encodings, not encryption.</li>
+      </ul>
+
+      <h2>Padding, briefly</h2>
+      <p>Base64 encodes 3 bytes into 4 characters. If the input length is not divisible by 3, the encoder emits one or two <code>=</code> characters to complete the final group. Padding carries no data — it exists so decoders can reject truncated strings. Base64URL drops it because the length already tells you what was missing, and because <code>=</code> is annoying in URLs. A tolerant decoder should accept both padded and unpadded input; ours does.</p>
+
+      <h2>Try it</h2>
+      <p>Convert between the two with the <a href="/pages/codecs.html#/share?c=base64url">Base64URL tool</a>, or decode either alphabet with the <a href="/base64-decoder/">Base64 decoder</a>. Both run entirely in your browser.</p>
+
+      <p class="muted small"><a href="/blog/how-to-read-a-jwt.html">Next: How to read a JWT →</a></p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JWT Decoder &amp; Signer | CodecKit</title>
+  <meta name="description" content="Decode JSON Web Tokens and create HS256-signed JWTs locally with Web Crypto. Signatures are never verified here; secrets never leave your browser.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/jwt.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html" aria-current="page">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>JWT Decoder &amp; Signer</h1>
+      <p class="muted"><strong class="privacy-note">🔒 Tokens and secrets are parsed locally. Nothing is sent anywhere.</strong></p>
+
+      <div class="tabs">
+        <button class="tab active" data-jwttab="decoder" type="button" aria-pressed="true">Decoder</button>
+        <button class="tab" data-jwttab="signer" type="button" aria-pressed="false">Signer (HS256)</button>
+      </div>
+
+      <section class="tool" id="jwt-decoder" data-codec="jwt" data-direction="decode">
+        <label for="jwt-in">Token</label>
+        <textarea id="jwt-in" data-input placeholder="eyJhbGciOi…&#10;Paste a JWT (three dot-separated parts) — it decodes live, no network." spellcheck="false"></textarea>
+        <label for="jwt-out">Decoded</label>
+        <textarea id="jwt-out" data-output readonly spellcheck="false"></textarea>
+        <div class="actions">
+          <button class="btn" data-action="copy" type="button">Copy 📋</button>
+          <span class="badge" data-exp-badge hidden></span>
+        </div>
+        <p class="error-line" data-error hidden role="alert"></p>
+        <details class="explain"><summary>About JWT decoding</summary><p>Decoding shows header + claims. Timestamps (iat/exp/nbf) are humanized; expiry status is computed from your device clock. <strong>Decoded only — signature NOT verified.</strong> Verification requires the server's key.</p></details>
+      </section>
+
+      <section class="tool" id="jwt-signer" data-testid="signer" hidden>
+        <p class="badge warn">⚠ Testing only — never paste production secrets.</p>
+        <label for="hdr">Header (JSON, alg is forced to HS256)</label>
+        <textarea id="hdr" data-hdr spellcheck="false">{"alg":"HS256","typ":"JWT"}</textarea>
+        <label for="pl">Payload (JSON)</label>
+        <textarea id="pl" data-pl spellcheck="false">{"sub":"1234567890","name":"John Doe","iat":1700000000}</textarea>
+        <label for="sec">Secret (HMAC key)</label>
+        <input id="sec" data-sec type="text" placeholder="hunter2" autocomplete="off">
+        <div class="actions">
+          <button class="btn primary" data-sign type="button">Sign ✍</button>
+          <span class="badge" data-sign-status hidden></span>
+        </div>
+        <label for="tok">Token</label>
+        <textarea id="tok" data-tok readonly spellcheck="false"></textarea>
+        <p class="error-line" data-sign-error hidden role="alert"></p>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="shortcuts-modal">
+    <h2>Keyboard shortcuts</h2>
+    <table>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>K</kbd></td><td>focus input</td></tr>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>Shift</kbd> <kbd>C</kbd></td><td>copy output</td></tr>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>Enter</kbd></td><td>swap input/output</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>clear (while typing)</td></tr>
+      <tr><td><kbd>?</kbd></td><td>this dialog</td></tr>
+    </table>
+    <form method="dialog"><button class="btn">Close</button></form>
+  </dialog>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

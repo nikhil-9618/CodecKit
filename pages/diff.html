@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diff Checker | CodecKit</title>
+  <meta name="description" content="Compare two blocks of text line by line with an inline longest-common-subsequence diff — additions in green, removals in red. Runs entirely offline.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/diff.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html" aria-current="page">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Diff Checker</h1>
+      <p class="muted">Original on the left, changed on the right. The diff is computed locally with a longest-common-subsequence algorithm — no upload. </p>
+
+      <section class="tool">
+        <div class="diff-grid">
+          <div>
+            <label for="old">Original</label>
+            <textarea id="old" data-old spellcheck="false">const greeting = 'hello';
+console.log(greeting);
+// TODO fix me</textarea>
+          </div>
+          <div>
+            <label for="mod">Changed</label>
+            <textarea id="mod" data-new spellcheck="false">const greeting = 'hey there';
+console.log(greeting, world);
+// TODO fix me
+// extra comment</textarea>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" data-run type="button">Compare</button>
+          <span class="muted small" data-stat></span>
+        </div>
+        <div class="diff-out" data-diffout></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

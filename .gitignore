@@ -1,0 +1,23 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Editors
+.vscode/
+.idea/
+
+# Local tooling (the app itself has no dependencies)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Generated / local preview output
+freebuff-sites-build/
+dist/
+.vercel/
+.netlify/
+*.log
+/freebuff-sites-build/

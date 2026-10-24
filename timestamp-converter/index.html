@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unix Timestamp Converter — Epoch to Date (UTC &amp; Local) | CodecKit</title>
+  <meta name="description" content="Convert Unix epoch seconds or milliseconds to ISO 8601, UTC and local time — and back. Live clock, relative time, no server round-trip.">
+  <meta property="og:title" content="Unix Timestamp Converter">
+  <meta property="og:description" content="Epoch ↔ human date with seconds and millisecond support, UTC and local output, relative time.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/timestamp.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is a Unix timestamp in seconds or milliseconds?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It depends on the system. Ten digits is almost always seconds (valid until the year 2286), thirteen digits is milliseconds. JavaScript's Date.now() returns milliseconds, while most C and Python APIs return seconds." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is 0 as a Unix timestamp?",
+        "acceptedAnswer": { "@type": "Answer", "text": "1970-01-01T00:00:00Z, the Unix epoch. Negative values represent dates before it." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the converter use my timezone?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It shows both. UTC output is timezone-independent and safe to store; local output uses the timezone reported by your browser." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html" aria-current="page">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Unix Timestamp Converter</h1>
+      <p class="muted">Epoch ↔ human time, seconds or milliseconds, UTC + local. <strong class="privacy-note">🔒 No network calls at all.</strong></p>
+
+      <section class="tool">
+        <label for="iso-in">Date &amp; time → epoch</label>
+        <div class="actions" style="margin-bottom:8px">
+          <button class="btn" data-now type="button">Now</button>
+          <span class="badge info" data-live-clock>—</span>
+        </div>
+        <input id="iso-in" data-iso type="datetime-local" step="1">
+        <table>
+          <tr><th scope="row">Unix (seconds)</th><td class="mono" data-epoch-s></td><td><button class="btn ghost" data-copy="epoch-s" type="button">Copy</button></td></tr>
+          <tr><th scope="row">Unix (ms)</th><td class="mono" data-epoch-ms></td><td><button class="btn ghost" data-copy="epoch-ms" type="button">Copy</button></td></tr>
+          <tr><th scope="row">ISO 8601 (UTC)</th><td class="mono" data-iso-utc></td><td><button class="btn ghost" data-copy="iso-utc" type="button">Copy</button></td></tr>
+          <tr><th scope="row">ISO 8601 (local)</th><td class="mono" data-iso-local></td><td><button class="btn ghost" data-copy="iso-local" type="button">Copy</button></td></tr>
+          <tr><th scope="row">Relative</th><td colspan="2" data-relative></td></tr>
+        </table>
+      </section>
+
+      <section class="tool">
+        <label for="epoch-in">Epoch (s or ms) → date</label>
+        <input id="epoch-in" data-epoch-input type="text" inputmode="numeric" placeholder="e.g. 1700000000 or 1700000000123" spellcheck="false">
+        <table>
+          <tr><th scope="row">UTC</th><td class="mono" data-from-epoch-utc>—</td></tr>
+          <tr><th scope="row">Local</th><td class="mono" data-from-epoch-local>—</td></tr>
+          <tr><th scope="row">Relative</th><td data-from-epoch-relative>—</td></tr>
+        </table>
+      </section>
+
+      <h2>What the Unix epoch is</h2>
+      <p>Unix time counts the seconds elapsed since 00:00:00 UTC on 1 January 1970, ignoring leap seconds. It is a single integer, which makes it easy to store, sort and compare — and it is timezone-free, because the timezone only matters when you render it as text. That is why APIs, logs and databases pass timestamps as numbers and let the client decide how to display them.</p>
+      <p>Milliseconds exist because one second is coarse for modern software. JavaScript's <code>Date.now()</code>, Java's <code>System.currentTimeMillis()</code> and most event streams use milliseconds. Both are supported here: type a 10-digit value and it is read as seconds, a 13-digit value as milliseconds.</p>
+
+      <h2>Common values</h2>
+      <ul>
+        <li><code>0</code> — 1970-01-01T00:00:00Z, the epoch itself.</li>
+        <li><code>1000000000</code> — 2001-09-09T01:46:40Z, the “billennium”.</li>
+        <li><code>1700000000</code> — 2023-11-14T22:13:20Z, a favourite test value.</li>
+        <li><code>2147483647</code> — 2038-01-19T03:14:07Z, the 32-bit signed limit behind the Year 2038 problem.</li>
+        <li><code>253402300799</code> — 9999-12-31T23:59:59Z, the largest value most date libraries accept.</li>
+      </ul>
+
+      <h2>Seconds, milliseconds, and mistakes</h2>
+      <p>Passing seconds to an API that expects milliseconds lands you in January 1970; the reverse puts you tens of thousands of years in the future. Counting the digits is the quick fix. Note that ISO 8601 strings such as <code>2023-11-14T22:13:20.000Z</code> are unambiguous and human-readable — prefer them at boundaries between systems, and convert to epoch only for arithmetic.</p>
+      <p>Timestamps appear inside tokens too: JWT <code>iat</code> and <code>exp</code> claims are epoch seconds. The <a href="/jwt-decoder/">JWT decoder</a> humanizes them automatically.</p>
+
+      <h2>Frequently asked questions</h2>
+      <h3>Seconds or milliseconds?</h3>
+      <p>Ten digits is seconds, thirteen is milliseconds. This tool detects which.</p>
+      <h3>What is 0?</h3>
+      <p>1970-01-01T00:00:00Z. Negative numbers are earlier dates.</p>
+      <h3>Which timezone is shown?</h3>
+      <p>Both UTC and your browser's local timezone.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

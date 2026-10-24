@@ -1,0 +1,27 @@
+{
+  "name": "CodecKit — Developer & Cybersecurity Toolkit",
+  "short_name": "CodecKit",
+  "description": "Ad-free, 100% client-side encoder/decoder, JWT, hash, password, subnet, CVE and regex tools. Works offline.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0e1116",
+  "theme_color": "#0e1116",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["developer", "utilities", "security"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Base64", "url": "/pages/codecs.html#/share?c=base64", "description": "Encode or decode Base64" },
+    { "name": "JWT decoder", "url": "/pages/jwt.html", "description": "Inspect a JSON Web Token" },
+    { "name": "Hash", "url": "/pages/hash.html", "description": "MD5 / SHA digests" },
+    { "name": "Subnet calculator", "url": "/pages/subnet.html", "description": "CIDR math with binary steps" }
+  ]
+}

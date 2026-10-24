@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodecKit — Developer &amp; Cybersecurity Toolkit</title>
+  <meta name="description" content="Free, fast, ad-free developer and cybersecurity toolkit: Base64, JWT, hashes, URL encoding, subnet math, CVE explainers and more. 100% client-side — your data never leaves your browser.">
+  <meta property="og:title" content="CodecKit — Developer &amp; Cybersecurity Toolkit">
+  <meta property="og:description" content="Encoding, decoding, hashing, JWT, subnet math and CVE lookups. Clean, fast, ad-free, 100% client-side.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html" aria-current="page">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>CodecKit</h1>
+      <p class="muted">The developer &amp; cybersecurity toolkit. <strong class="privacy-note">🔒 All conversion happens in your browser.</strong> No servers, no tracking, no ads.</p>
+
+      <h2 class="group-title"><span class="icon">⇄</span> Encoding &amp; Decoding</h2>
+      <ul class="toolkit">
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=base64"><span class="tool-name">Base64</span><span class="tool-desc">UTF-8 safe encode &amp; decode, file→data URI</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=base64url"><span class="tool-name">Base64URL</span><span class="tool-desc">JWT's URL-safe alphabet</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=base32"><span class="tool-name">Base32</span><span class="tool-desc">RFC 4648, TOTP secret keys</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=base58"><span class="tool-name">Base58</span><span class="tool-desc">Bitcoin alphabet, no 0/O/I/l</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=url"><span class="tool-name">URL Encode</span><span class="tool-desc">Percent-encoding for query strings</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=hex"><span class="tool-name">Hex</span><span class="tool-desc">Text ↔ hexadecimal bytes</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=binary"><span class="tool-name">Binary</span><span class="tool-desc">Text ↔ 01001000-style groups</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=rot"><span class="tool-name">ROT13</span><span class="tool-desc">Self-inverse letter obfuscation</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=caesar"><span class="tool-name">Caesar</span><span class="tool-desc">Shift 1–25 with live slider</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=morse"><span class="tool-name">Morse</span><span class="tool-desc">International Morse code</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=bacon"><span class="tool-name">Bacon</span><span class="tool-desc">5-symbol a/b cipher groups</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=html-entity"><span class="tool-name">HTML Entity</span><span class="tool-desc">&amp;escape; &lt;tags&gt; safely</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=unicode-escape"><span class="tool-name">Unicode Escape</span><span class="tool-desc">\uXXXX sequences</span></a></li>
+        <li class="tool-card"><a href="/pages/codecs.html#/share?c=jwt"><span class="tool-name">JWT Decoder</span><span class="tool-desc">Peek inside tokens, human dates</span></a></li>
+      </ul>
+
+      <h2 class="group-title"><span class="icon">🛡</span> Security &amp; Analysis</h2>
+      <ul class="toolkit">
+        <li class="tool-card"><a href="/pages/password.html"><span class="tool-name">Password Strength</span><span class="tool-desc">Entropy + breach check via k-anonymity</span></a></li>
+        <li class="tool-card"><a href="/pages/hash.html"><span class="tool-name">Hash Generator</span><span class="tool-desc">MD5, SHA-1/256/384/512</span></a></li>
+        <li class="tool-card"><a href="/pages/hash.html#identify"><span class="tool-name">Hash Identifier</span><span class="tool-desc">Guess MD5/SHA/bcrypt/Argon2 from shape</span></a></li>
+        <li class="tool-card"><a href="/pages/subnet.html"><span class="tool-name">Subnet Calculator</span><span class="tool-desc">CIDR math with step-by-step binary</span></a></li>
+        <li class="tool-card"><a href="/pages/cve.html"><span class="tool-name">CVE Explainer</span><span class="tool-desc">Plain-English vulnerability summaries</span></a></li>
+        <li class="tool-card"><a href="/pages/jwt.html"><span class="tool-name">JWT Signer</span><span class="tool-desc">HS256 locally, testing only</span></a></li>
+      </ul>
+
+      <h2 class="group-title"><span class="icon">🛠</span> Developer Utilities</h2>
+      <ul class="toolkit">
+        <li class="tool-card"><a href="/pages/timestamp.html"><span class="tool-name">Timestamp Converter</span><span class="tool-desc">Epoch ↔ ISO 8601, live clock</span></a></li>
+        <li class="tool-card"><a href="/pages/regex.html"><span class="tool-name">Regex Tester</span><span class="tool-desc">Live matches + capture groups</span></a></li>
+        <li class="tool-card"><a href="/pages/diff.html"><span class="tool-name">Diff Checker</span><span class="tool-desc">Line-by-line LCS comparison</span></a></li>
+        <li class="tool-card"><a href="/pages/explain-command.html"><span class="tool-name">Explain Command</span><span class="tool-desc">Flag-by-flag shell breakdown</span></a></li>
+      </ul>
+
+      <p class="muted small">Prefer deep links? Every codec is addressable: <a href="/pages/codecs.html#/share?c=hex">codecs.html#/share?c=hex</a>. New to the project? Read the <a href="/pages/about.html">About</a> page or the <a href="/blog/">blog</a>.</p>
+    </div>
+  </main>
+
+  <dialog id="shortcuts-modal">
+    <h2>Keyboard shortcuts</h2>
+    <table>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>K</kbd></td><td>focus input</td></tr>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>Shift</kbd> <kbd>C</kbd></td><td>copy output</td></tr>
+      <tr><td><kbd>Ctrl/⌘</kbd> <kbd>Enter</kbd></td><td>swap input/output</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>clear (while typing)</td></tr>
+      <tr><td><kbd>?</kbd></td><td>this dialog</td></tr>
+    </table>
+    <form method="dialog"><button class="btn">Close</button></form>
+  </dialog>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/pages/about.html">About</a>
+      <a href="/blog/">Blog</a>
+      <a href="/pages/about.html#feedback">Feedback</a>
+      <span>MIT licensed · no cookies, no trackers</span>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

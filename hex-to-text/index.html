@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hex to Text Converter — Decode Hex Bytes | CodecKit</title>
+  <meta name="description" content="Convert hexadecimal to readable text instantly. Accepts spaced or continuous hex, decodes UTF-8, and runs entirely in your browser with no upload.">
+  <meta property="og:title" content="Hex to Text Converter">
+  <meta property="og:description" content="Turn 48 65 6c 6c 6f into Hello. UTF-8 aware, client-side, works offline.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does the converter accept spaces and 0x prefixes?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Whitespace, colons, commas and 0x prefixes are stripped before decoding, so dumps such as 0x48 0x65 or 48:65:6c work." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why did my hex string fail?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Hex must contain an even number of digits. A single leftover nibble, or a character outside 0-9a-f, makes the byte string ambiguous and the converter reports invalid input." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the text sent anywhere?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. The conversion is a pure JavaScript function running on your device. There is no server component and no logging." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html" aria-current="page">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Hex to Text</h1>
+      <p class="muted">Decode hexadecimal bytes back into readable UTF-8 text. <strong class="privacy-note">🔒 Stays on your device.</strong></p>
+
+      <section class="tool" data-codec="hex" data-direction="decode">
+        <label for="hex-in">Hex bytes</label>
+        <textarea id="hex-in" data-input placeholder="48 65 6c 6c 6f" spellcheck="false" autofocus></textarea>
+        <label for="hex-out">Text</label>
+        <textarea id="hex-out" data-output readonly spellcheck="false"></textarea>
+        <div class="actions">
+          <button class="btn primary" data-action="copy" type="button">Copy 📋</button>
+          <a class="btn" href="/pages/codecs.html#/share?c=hex">Text → hex instead →</a>
+        </div>
+        <p class="error-line" data-error hidden role="alert"></p>
+      </section>
+
+      <h2>How hexadecimal represents text</h2>
+      <p>Every byte is two hexadecimal digits, so a string is just its UTF-8 bytes written in base 16. <code>Hello</code> is five bytes — <code>48 65 6c 6c 6f</code> — because ASCII letters fit in one byte. Characters outside ASCII take more bytes: <code>é</code> is <code>c3 a9</code>, the euro sign is <code>e2 82 ac</code>, and an emoji needs four. The decoder here strips spaces, colons and <code>0x</code> prefixes, rebuilds the byte array, then asks the browser's UTF-8 decoder for the text.</p>
+      <p>That last step matters. Decoding byte-by-byte as Latin-1 would turn every multi-byte character into mojibake. If the bytes are not valid UTF-8 — for example an encrypted blob or a PNG header — the result will be replaced characters rather than a crash.</p>
+
+      <h2>Where hex dumps come from</h2>
+      <ul>
+        <li><code>xxd</code>, <code>hexdump -C</code> and <code>od -A x -t x1z</code> on Linux and macOS.</li>
+        <li>Packet captures: Wireshark's “Copy → as Hex Dump”.</li>
+        <li>Hash digests, which are simply fixed-length hex strings such as SHA-256's 64 characters.</li>
+        <li>Binary protocol fields, MAC addresses and bytecode listings.</li>
+      </ul>
+
+      <h2>Debugging tips</h2>
+      <p>If a value refuses to decode, count the digits. An odd count means a nibble is missing. If the count is even but the output looks wrong, the payload may be compressed, encrypted or encoded in a legacy single-byte charset rather than UTF-8. When you are looking at a hash instead of a message, the <a href="/pages/hash.html#identify">hash identifier</a> can tell you which algorithm produced it from its length and alphabet.</p>
+      <p>Hex is also the natural companion of the <a href="/base64-decoder/">Base64 decoder</a>: base64 hides the bytes in a different alphabet, but after decoding you can inspect them as hex.</p>
+
+      <h2>Frequently asked questions</h2>
+      <h3>Does it accept spaces and 0x prefixes?</h3>
+      <p>Yes. Whitespace, commas, colons and <code>0x</code> are ignored.</p>
+      <h3>Why did my hex string fail?</h3>
+      <p>The digit count is odd, or a character is not a hex digit.</p>
+      <h3>Is the text sent anywhere?</h3>
+      <p>No. Conversion runs locally and the page works offline.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

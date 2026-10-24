@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Base64 Decoder — Decode Base64 to Text Locally | CodecKit</title>
+  <meta name="description" content="Decode Base64 to plain text instantly in your browser. UTF-8 safe, handles padding and Base64URL, and nothing is uploaded to a server.">
+  <meta property="og:title" content="Base64 Decoder — decode to text locally">
+  <meta property="og:description" content="Paste Base64 and read the decoded text immediately. UTF-8 safe, URL-safe alphabet supported, 100% client-side.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Base64 encryption?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Base64 is a reversible encoding, not encryption. Anyone can decode it without a key. Never use it to protect passwords, tokens or personal data — use real encryption such as AES-GCM." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my Base64 fail to decode?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The usual causes are whitespace or line breaks inside the string, characters outside the Base64 alphabet, missing padding at the end, or a Base64URL value that uses - and _ instead of + and /." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does my input leave the browser?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Decoding runs in JavaScript on your device. There is no upload, no logging and no analytics. The page even works offline once loaded." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html" aria-current="page">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Base64 Decoder</h1>
+      <p class="muted">Paste Base64 and get readable text back. <strong class="privacy-note">🔒 Decoded locally — nothing is uploaded.</strong></p>
+
+      <section class="tool" data-codec="base64" data-direction="decode">
+        <label for="b64-in">Base64 input</label>
+        <textarea id="b64-in" data-input placeholder="SGVsbG8sIHdvcmxkIQ==" spellcheck="false" autofocus></textarea>
+        <label for="b64-out">Decoded text</label>
+        <textarea id="b64-out" data-output readonly spellcheck="false"></textarea>
+        <div class="actions">
+          <button class="btn primary" data-action="copy" type="button">Copy 📋</button>
+          <a class="btn" href="/pages/codecs.html#/share?c=base64">Encode instead →</a>
+        </div>
+        <p class="error-line" data-error hidden role="alert"></p>
+      </section>
+
+      <h2>What Base64 actually does</h2>
+      <p>Base64 takes arbitrary bytes and represents every three bytes as four printable ASCII characters from a 64-character alphabet: <code>A–Z</code>, <code>a–z</code>, <code>0–9</code>, <code>+</code> and <code>/</code>. Because email, JSON, XML and HTTP headers were designed for text, binary payloads are base64-encoded before they travel through them. That is why images appear as <code>data:image/png;base64,…</code> and why JWT segments look like random letters.</p>
+      <p>Encoding is completely reversible and requires no key. If you can decode it, so can anyone else — Base64 is transport encoding, never a security control.</p>
+
+      <h2>Reading the padding</h2>
+      <p>Each four-character group carries 24 bits. When the input length is not a multiple of three, the encoder pads the output with <code>=</code> characters: one byte left over produces one <code>=</code>, two bytes produce <code>==</code>. A decoder that rejects valid strings usually trips over a stripped padding character or over a newline inserted by a mail client. This tool tolerates surrounding whitespace and missing padding, then decodes the bytes as UTF-8 so accented letters and emoji survive.</p>
+
+      <h2>Base64 vs Base64URL</h2>
+      <p>URLs and JWT headers cannot contain <code>+</code> or <code>/</code> without escaping, so the URL-safe variant swaps them for <code>-</code> and <code>_</code> and usually drops padding. If a string contains those characters, switch to the <a href="/pages/codecs.html#/share?c=base64url">Base64URL tool</a>; the decoder here accepts both alphabets so you rarely have to think about it.</p>
+
+      <h2>Common uses</h2>
+      <ul>
+        <li>Inspecting the header and payload of a JWT — see the <a href="/jwt-decoder/">JWT decoder</a>.</li>
+        <li>Recovering text from a data URI produced by the <a href="/pages/codecs.html#/share?c=base64">file → Base64</a> tool.</li>
+        <li>Debugging HTTP Basic authentication headers, which are <code>base64(user:password)</code>.</li>
+        <li>Reading attachment payloads from SMTP or MIME dumps.</li>
+      </ul>
+
+      <h2>Frequently asked questions</h2>
+      <h3>Is Base64 encryption?</h3>
+      <p>No. It is a reversible encoding with no key. Treat decoded content as public.</p>
+      <h3>Why does my Base64 fail to decode?</h3>
+      <p>Check for spaces, line breaks, a truncated final group, or a URL-safe alphabet. The error line above tells you when the input is not valid Base64 at all.</p>
+      <h3>Does my input leave the browser?</h3>
+      <p>No. The conversion is a pure function in a JavaScript module. There is no backend to send it to.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

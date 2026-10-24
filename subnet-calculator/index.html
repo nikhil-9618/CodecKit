@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subnet Calculator — CIDR, Mask &amp; Host Range | CodecKit</title>
+  <meta name="description" content="Calculate network address, broadcast, subnet mask, wildcard and usable hosts from any IPv4 CIDR. Shows the binary AND/OR math step by step. No network calls.">
+  <meta property="og:title" content="IPv4 Subnet Calculator with binary steps">
+  <meta property="og:description" content="Enter 192.168.1.130/26 and see network, broadcast, mask, wildcard, host range and the bit math behind them.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/subnet.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many usable hosts does a /26 have?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A /26 leaves 6 host bits, so it contains 2^6 = 64 addresses. The network and broadcast addresses cannot be assigned, which leaves 62 usable hosts." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do /31 and /32 behave differently?",
+        "acceptedAnswer": { "@type": "Answer", "text": "RFC 3021 allows both addresses of a /31 to be used on point-to-point links, so it has 2 usable addresses. A /32 represents a single host and has one address with no network or broadcast." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the calculation done online?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. It is plain 32-bit integer arithmetic in JavaScript on your device. The tool works with the network disconnected." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html" aria-current="page">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Subnet Calculator</h1>
+      <p class="muted">Enter an IPv4 address with a CIDR prefix, e.g. <code>192.168.1.130/26</code>. <strong class="privacy-note">🔒 Pure math, no network.</strong></p>
+
+      <section class="tool">
+        <label for="cidr">Address / CIDR</label>
+        <input id="cidr" data-cidr type="text" placeholder="192.168.1.130/26" spellcheck="false" autofocus>
+        <table data-results>
+          <tbody>
+            <tr><th scope="row">Network address</th><td class="mono" data-network>—</td></tr>
+            <tr><th scope="row">Broadcast</th><td class="mono" data-broadcast>—</td></tr>
+            <tr><th scope="row">Subnet mask</th><td class="mono" data-mask>—</td></tr>
+            <tr><th scope="row">Wildcard mask</th><td class="mono" data-wildcard>—</td></tr>
+            <tr><th scope="row">Usable host range</th><td class="mono" data-range>—</td></tr>
+            <tr><th scope="row">Usable hosts</th><td class="mono" data-hosts>—</td></tr>
+            <tr><th scope="row">Address class</th><td data-iplclass class="mono">—</td></tr>
+          </tbody>
+        </table>
+        <p class="error-line" data-error hidden role="alert"></p>
+      </section>
+
+      <section class="tool" data-binary hidden>
+        <h2>Binary math</h2>
+        <table>
+          <tr><th scope="row">Address (binary)</th><td class="mono" data-b-addr></td></tr>
+          <tr><th scope="row">Mask (binary)</th><td class="mono" data-b-mask></td></tr>
+          <tr><th scope="row">AND → network (binary)</th><td class="mono" data-b-net></td></tr>
+          <tr><th scope="row">OR wildcard → broadcast (binary)</th><td class="mono" data-b-bcast></td></tr>
+        </table>
+        <p class="muted small">The 32-bit address is ANDed with the mask (prefix bits = 1) to get the network; ORed with the wildcard to get the broadcast.</p>
+      </section>
+
+      <h2>Reading a CIDR block</h2>
+      <p>The slash number is the prefix length: how many bits of the address identify the network. A <code>/24</code> pins the first 24 bits, leaving 8 bits — 256 addresses — for hosts. A <code>/26</code> pins 26 bits and leaves 6, which is 64 addresses. Because the lowest address names the network and the highest is the broadcast, the assignable range is two smaller.</p>
+      <p>Subnetting is one bitwise operation repeated. The mask is 32 ones followed by 32 minus the prefix zeros. Address AND mask gives the network address. Inverting the mask gives the wildcard; network OR wildcard gives the broadcast. Every other number follows from those two.</p>
+
+      <h2>A worked example</h2>
+      <p>Take <code>192.168.1.130/26</code>. The mask is <code>255.255.255.192</code>, so blocks start at .0, .64, .128 and .192. The address .130 falls in the .128 block: network <code>192.168.1.128</code>, broadcast <code>192.168.1.191</code>, usable <code>.129–.190</code>, 62 hosts. In binary, the fourth octet is <code>10000010</code>; the mask's last octet is <code>11000000</code>; AND gives <code>10000000</code> (128). The tool prints this exact bit pattern above.</p>
+
+      <h2>Special prefixes</h2>
+      <ul>
+        <li><code>/0</code> — the default route: 0.0.0.0/0 covers the entire IPv4 space.</li>
+        <li><code>/31</code> — point-to-point links (RFC 3021): both addresses usable, no broadcast.</li>
+        <li><code>/32</code> — a single host route, often used for loopbacks and firewall rules.</li>
+        <li>Private ranges: 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16 are not routed on the public internet.</li>
+      </ul>
+
+      <h2>Frequently asked questions</h2>
+      <h3>How many usable hosts does a /26 have?</h3>
+      <p>64 addresses minus network and broadcast — 62 usable.</p>
+      <h3>Why do /31 and /32 behave differently?</h3>
+      <p>A /31 is a point-to-point link with 2 usable addresses; a /32 is a single host.</p>
+      <h3>Is the calculation done online?</h3>
+      <p>No. It is integer arithmetic in your browser and works offline.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

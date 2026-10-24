@@ -1,0 +1,6 @@
+# Railpack (Railway's builder) static-site configuration.
+# The site is served from the repository root, not a `public/` folder.
+# index_fallback stays false so unknown paths return a real 404 instead of
+# silently serving the home page as HTML for a missing script.
+root: .
+index_fallback: false

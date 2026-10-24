@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About | CodecKit</title>
+  <meta name="description" content="CodecKit is a free, open-source, 100% client-side developer and cybersecurity toolkit. No tracking, no accounts, no ads.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html" aria-current="page">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container prose">
+      <h1>About CodecKit</h1>
+      <p>CodecKit exists because every other "toolkit" site greets you with ads, cookie popups and a JS bundle from 2013. This one is a handful of HTML, CSS and vanilla ES2022 modules that does conversions <em>in your browser</em>.</p>
+
+      <h2 id="privacy">The privacy promise</h2>
+      <ul>
+        <li>No accounts, no logins, no sessions.</li>
+        <li>No analytics, no trackers, no cookies. No cookie banner needed — there is nothing to consent to.</li>
+        <li>Your input never leaves the browser, with exactly two exceptions, both necessary and both public:<br>
+          1. <strong>Password breach check</strong> uses HIBP k-anonymity — only the first 5 hex chars of a local SHA-1 are sent; the full hash and password stay local.<br>
+          2. <strong>CVE lookup</strong> sends the CVE ID — which is public information anyway — to the NVD API.</li>
+        <li>Everything else (JWT secrets, hashes, diffs, your last 10 inputs per tool) lives in <code>localStorage</code> on your device.</li>
+        <li>The service worker caches the app so it keeps working offline.</li>
+      </ul>
+
+      <h2 id="feedback">Feedback &amp; contributions</h2>
+      <p>CodecKit is open source (MIT). Ideas, bugs and pull requests are welcome — see CONTRIBUTING.md in the repository. Adding a codec is one file + one registry line.</p>
+      <ul>
+        <!-- TODO: replace with your repository / donation URLs before publishing. -->
+        <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a> — source code, issue tracker and pull requests.</li>
+        <li><a href="https://ko-fi.com/" target="_blank" rel="noopener noreferrer">Support the project</a> — hosting is free and the app has no ads; a coffee is optional.</li>
+      </ul>
+      <div class="actions">
+        <button class="btn" data-action="reset-data" type="button">Reset all locally saved data</button>
+      </div>
+
+      <h2>Source &amp; resources</h2>
+      <ul>
+        <li><a href="/blog/">The CodecKit blog</a> — short articles: Base64 vs Base64URL, reading a JWT, k-anonymity.</li>
+        <li>Schema: every codec is a pure module with <code>meta</code>, <code>encode</code>, <code>decode</code> in <code>/codecs/</code>.</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <span>MIT licensed · no cookies, no trackers</span>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to read a JWT — header, claims and signature | CodecKit</title>
+  <meta name="description" content="A practical walkthrough of a JSON Web Token: what each segment means, which claims to check, why decoding is not verification, and the mistakes that break auth.">
+  <meta property="og:title" content="How to read a JWT">
+  <meta property="og:description" content="Header, payload, signature — and the five checks that actually matter.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to read a JWT",
+    "description": "Header, payload, signature and the checks that matter when verifying a JSON Web Token.",
+    "author": { "@type": "Organization", "name": "CodecKit" },
+    "publisher": { "@type": "Organization", "name": "CodecKit" },
+    "datePublished": "2026-02-03",
+    "mainEntityOfPage": "/blog/how-to-read-a-jwt.html"
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container prose">
+      <p class="muted small"><a href="/blog/">← All articles</a> · 3 February 2026 · 6 min read</p>
+      <h1>How to read a JWT</h1>
+
+      <p>A JSON Web Token looks like three random strings glued together with dots. It is not random, and reading one is a five-minute skill. Here is a complete token, decoded:</p>
+
+      <pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE3MDAwMDM2MDB9
+.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
+
+      <h2>Segment one: the header</h2>
+      <p>Base64URL-decode it and you get <code>{"alg":"HS256","typ":"JWT"}</code>. The <code>alg</code> field names the signing algorithm — HMAC-SHA256 here, <code>RS256</code> for RSA, <code>ES256</code> for ECDSA. <code>typ</code> is optional metadata. Key IDs (<code>kid</code>) also live here when a server rotates keys.</p>
+      <p>The header is not trustworthy. It is part of the signed bytes, so it cannot be changed without invalidating the signature, but it is also attacker-controlled before signing: a server that selects the algorithm from this field is vulnerable to algorithm-confusion attacks. Verify with a pinned algorithm, never with whatever the token asks for.</p>
+
+      <h2>Segment two: the payload</h2>
+      <p>Decoding gives a JSON object of claims:</p>
+      <pre><code>{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1700000000,
+  "exp": 1700003600
+}</code></pre>
+      <p>Registered claims have fixed meanings. <code>sub</code> identifies the principal. <code>iat</code>, <code>nbf</code> and <code>exp</code> are NumericDate values — seconds since the Unix epoch. <code>aud</code> names the intended audience and <code>iss</code> the issuer. Everything else is application-defined and should be treated as untrusted input even after verification: a role claim becomes a database lookup, not a string comparison against user input.</p>
+      <p>Payloads are not encrypted. Anyone holding the token can read every claim. Do not put secrets, internal hostnames or personal data in one unless you are using JWE, which encrypts the payload as well as signing it.</p>
+
+      <h2>Segment three: the signature</h2>
+      <p>For HS256, the signature is HMAC-SHA256 over the ASCII bytes of <code>header.payload</code>, using a shared secret, then Base64URL-encoded. For RS256 or ES256, it is a signature with the issuer's private key, checked with the matching public key. That asymmetry is why RS256 suits distributed systems: resource servers can verify without holding a signing secret.</p>
+      <p>This is the only part that carries proof. Decoding the first two segments tells you what the token claims; it tells you nothing about whether the claims are true.</p>
+
+      <h2>The five checks that matter</h2>
+      <ol>
+        <li><strong>Signature</strong> — recompute it with the expected key and algorithm. Reject anything else.</li>
+        <li><strong>Algorithm</strong> — pin it. Reject <code>none</code>, and reject an RS256 token presented to an HS256 verifier (the classic confusion attack).</li>
+        <li><strong>Expiry</strong> — compare <code>exp</code> to the current time with a small clock-skew allowance, and honour <code>nbf</code>.</li>
+        <li><strong>Audience</strong> — the token must be for you. A token minted for another service should fail.</li>
+        <li><strong>Issuer</strong> — must match a known, trusted value, ideally discovered from a pinned JWKS endpoint.</li>
+      </ol>
+      <p>Only after all five pass should you look at <code>sub</code> or a role claim. Skipping any of them turns a token into an assertion by the client about itself.</p>
+
+      <h2>Reading vs verifying</h2>
+      <p>Debugging needs reading: what is in this token, is it expired, which algorithm signed it. That is what a decoder does, and it is safe to do locally. Production needs verification, and that belongs on a server that holds the key. A client-side “verified” badge proves nothing because the client can lie to itself.</p>
+      <p>Our <a href="/jwt-decoder/">JWT decoder</a> shows the header, humanizes timestamps and flags expiry, entirely in your browser. To mint a sample token with a throwaway secret, use the <a href="/pages/jwt.html#signer">HS256 signer</a> — and never paste a production secret into any web page.</p>
+
+      <h2>Common mistakes, in order of damage</h2>
+      <ul>
+        <li>Trusting <code>alg</code> from the header instead of pinning it.</li>
+        <li>Using the token as a session store for mutable permissions with a long expiry.</li>
+        <li>No revocation path: JWTs are valid until they expire unless you keep a deny-list.</li>
+        <li>Storing them in <code>localStorage</code>, where any XSS can read them. Prefer an HttpOnly, Secure, SameSite cookie.</li>
+        <li>Forgetting that the payload is readable, and putting something private in it.</li>
+      </ul>
+
+      <p class="muted small"><a href="/blog/what-is-k-anonymity.html">Next: What is k-anonymity? →</a></p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

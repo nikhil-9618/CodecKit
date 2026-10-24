@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regex Tester | CodecKit</title>
+  <meta name="description" content="Test JavaScript regular expressions live: match highlighting, capture groups, error explanations and MDN reference.">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/pages/regex.js"></script>
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html" aria-current="page">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Regex Tester</h1>
+      <p class="muted">JavaScript regex dialect (no lookahead tricks needed — see the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank" rel="noopener noreferrer">MDN reference</a>). <strong class="privacy-note">🔒 Runs locally.</strong></p>
+
+      <section class="tool">
+        <label for="pattern">Pattern (without surrounding slashes)</label>
+        <input id="pattern" data-pattern type="text" placeholder="\b\d{4}-\d{2}-\d{2}\b" spellcheck="false">
+        <label for="flags">Flags</label>
+        <input id="flags" data-flags type="text" value="g" style="max-width:120px" spellcheck="false">
+        <label for="teststr">Test string</label>
+        <textarea id="teststr" data-test spellcheck="false">Invoice 2024-03-01 for $120.
+Backup created 2023-12-15.
+Not a date: 2024-3-5</textarea>
+
+        <h3>Highlighted</h3>
+        <div class="regex-result" data-highlights></div>
+
+        <h3>Matches</h3>
+        <div data-matches class="muted small"></div>
+        <p class="error-line" data-error hidden role="alert"></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What is k-anonymity? — checking a password without sending it | CodecKit</title>
+  <meta name="description" content="k-anonymity lets a breach checker answer a question about your password without learning the password. Here is the SHA-1 prefix trick, why five characters are enough, and what it does not protect.">
+  <meta property="og:title" content="What is k-anonymity?">
+  <meta property="og:description" content="How a breach check learns five hex characters and nothing else.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="/icons/icon-512.png">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/lib/boot.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What is k-anonymity?",
+    "description": "The prefix-hash technique behind private password breach checks.",
+    "author": { "@type": "Organization", "name": "CodecKit" },
+    "publisher": { "@type": "Organization", "name": "CodecKit" },
+    "datePublished": "2026-03-01",
+    "mainEntityOfPage": "/blog/what-is-k-anonymity.html"
+  }
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="site-inner">
+      <a class="brand" href="/">CodecKit</a>
+      <button data-nav-toggle aria-expanded="false" aria-label="Menu" type="button">☰</button>
+      <nav class="main">
+        <a href="/pages/codecs.html">Codecs</a>
+        <a href="/pages/jwt.html">JWT</a>
+        <a href="/pages/hash.html">Hash</a>
+        <a href="/pages/password.html">Password</a>
+        <a href="/pages/timestamp.html">Timestamp</a>
+        <a href="/pages/subnet.html">Subnet</a>
+        <a href="/pages/cve.html">CVE</a>
+        <a href="/pages/regex.html">Regex</a>
+        <a href="/pages/diff.html">Diff</a>
+        <a href="/pages/explain-command.html">Commands</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+      <button class="btn ghost" data-action="theme" aria-label="Toggle color theme" title="Toggle theme" type="button">◐</button>
+      <button class="btn ghost" data-shortcuts-open aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌨</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container prose">
+      <p class="muted small"><a href="/blog/">← All articles</a> · 1 March 2026 · 5 min read</p>
+      <h1>What is k-anonymity?</h1>
+
+      <p>“Is my password in a breach database?” is a question a service can answer, but the obvious implementation is terrible: send the password, get a yes or no. Now the service knows your password. Hashing it first does not help much either — send SHA-1(password) and the server can still test that exact hash against millions of candidates, and a leaked hash is a password-cracking target forever.</p>
+      <p>k-anonymity, as applied by Have I Been Pwned's Pwned Passwords API, inverts the trust: the client asks about a <em>group</em> of passwords instead of one, and does the final matching locally.</p>
+
+      <h2>The protocol</h2>
+      <ol>
+        <li>Hash the password locally with SHA-1. This produces 40 hex characters.</li>
+        <li>Send only the <strong>first 5</strong> characters to <code>api.pwnedpasswords.com/range/&lt;prefix&gt;</code>.</li>
+        <li>The server returns every suffix in its dataset that shares that prefix — typically several hundred to a few thousand lines of <code>SUFFIX:count</code>.</li>
+        <li>The client compares the remaining 35 characters itself. A match means the password is in the corpus, and the count says how often it appeared.</li>
+      </ol>
+      <p>The server never sees the full hash. It cannot tell which of the returned suffixes the client cared about, because the client downloads all of them. The request reveals only that someone, somewhere, holds a password whose hash starts with those five characters.</p>
+
+      <h2>Why five characters</h2>
+      <p>Five hex characters encode 20 bits, so there are about 1,048,576 possible prefixes. With roughly 10<sup>9</sup> breached passwords in the corpus, each prefix covers on average a thousand entries — the <em>k</em> in k-anonymity. Large enough that the request does not identify an individual password; small enough that the response stays under a few hundred kilobytes. Sending four characters would return tens of thousands of lines; sending six would narrow the anonymity set too far.</p>
+      <p>Note the honest limitation: the prefix is a partial fingerprint. If an attacker already suspects a specific password, they can check whether its prefix matches a request they observed. k-anonymity hides you among k candidates — it is not zero knowledge.</p>
+
+      <h2>What the client must still do</h2>
+      <p>The comparison must be constant-time-ish and, more importantly, local. A service that sends the remaining 35 characters “to speed things up” has thrown the property away. The same applies to logging: if the browser extension, proxy or analytics layer records request URLs, it records the prefix. CodecKit makes exactly one request per check, to one host, and sends nothing else.</p>
+
+      <h2>k-anonymity beyond passwords</h2>
+      <p>The general idea predates breach checks. A dataset is k-anonymous if every record is indistinguishable from at least k−1 others on the quasi-identifiers people might use to re-identify it — postcode, birth date, gender. Hospitals and census bureaus generalise or suppress fields until each combination covers at least k people. The password API is the same idea at query time: bucket the data coarsely, then resolve locally.</p>
+      <p>Related constructions go further. Private set intersection lets a client learn whether an item is in a server's set without revealing the item or the set; homomorphic encryption lets the server compute on ciphertext. They are more expensive and rarely necessary for a breach check, but they solve the same shape of problem.</p>
+
+      <h2>What it does not fix</h2>
+      <ul>
+        <li>A breach hit does not mean the password is currently exposed at your site — it means it is in a public corpus and should never be allowed.</li>
+        <li>A miss does not mean the password is strong. It means this corpus has not seen it.</li>
+        <li>The check says nothing about reuse across sites, which is the actual root cause of most account takeovers.</li>
+      </ul>
+      <p>Use it as one input to a policy, alongside length, a blocklist of common patterns and rate limiting. Reject known-breached passwords at signup; that single rule removes most credential-stuffing success.</p>
+
+      <h2>See it in action</h2>
+      <p>The <a href="/pages/password.html">password strength tool</a> implements this exact flow: SHA-1 in the browser, a five-character request, local matching. Open the network panel and you will see the range URL and nothing else. Everything else on the page — entropy, classes, crack-time estimate — is local arithmetic.</p>
+
+      <p class="muted small"><a href="/blog/">← Back to all articles</a></p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <span class="privacy-note">🔒 All conversion happens in your browser.</span>
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </footer>
+  <div class="offline-banner" aria-hidden="true">Offline — cached tools still work</div>
+</body>
+</html>
