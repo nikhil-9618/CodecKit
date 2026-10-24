@@ -1,0 +1,17 @@
+.git/
+.freebuff/
+.wrangler/
+freebuff-sites-build/
+tests/
+tools/
+README.md
+CONTRIBUTING.md
+LICENSE
+Staticfile
+netlify.toml
+render.yaml
+vercel.json
+wrangler.jsonc
+worker.js
+.gitignore
+.assetsignore

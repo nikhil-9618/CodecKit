@@ -43,6 +43,12 @@ The repository root **is** the publish directory.
 2. Build command empty, publish directory `.`.
 3. `netlify.toml` supplies the same headers.
 
+### Cloudflare Workers
+
+Deploy from the repository root with `npx wrangler deploy`. `wrangler.jsonc`
+configures the static assets and disables automatic HTML URL rewriting, so
+links such as `/pages/codecs.html` are served directly.
+
 ### Render
 
 1. Push the repo to GitHub/GitLab.

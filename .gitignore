@@ -19,5 +19,6 @@ freebuff-sites-build/
 dist/
 .vercel/
 .netlify/
+.wrangler/
 *.log
 /freebuff-sites-build/
