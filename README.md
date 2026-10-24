@@ -87,7 +87,7 @@ CVE lookups send the public CVE identifier to the NVD API. Results may be cached
 - Progressive Web App support
 - Service-worker caching for offline access
 
-*Features listed above should be verified against the current implementation before release.*
+Feature descriptions reflect the intended tool set; verify individual tools and external-service availability in your deployment before relying on them.
 
 ## ⚡ Quick Start
 
