@@ -1,7 +1,7 @@
 {
   "name": "CodecKit — Developer & Cybersecurity Toolkit",
   "short_name": "CodecKit",
-  "description": "Ad-free, 100% client-side encoder/decoder, JWT, hash, password, subnet, CVE and regex tools. Works offline.",
+  "description": "Ad-free developer and cybersecurity toolkit for encoding, JWT, hashing, password checks, subnet calculations, CVE lookups and regex. Most processing is local; optional lookups use public APIs. Works offline for cached tools.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
