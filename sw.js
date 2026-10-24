@@ -7,7 +7,7 @@
 // Bump CACHE_VERSION whenever shipped files change; activate() drops old
 // caches and takes control immediately.
 
-const CACHE_VERSION = 'codeckit-v1.0.3';
+const CACHE_VERSION = 'codeckit-v1.0.4';
 const CDN_CACHE = 'codeckit-cdn-v1';
 const NETWORK_ONLY_HOSTS = ['api.pwnedpasswords.com', 'services.nvd.nist.gov'];
 
